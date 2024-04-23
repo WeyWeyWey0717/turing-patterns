@@ -59,4 +59,6 @@ class BaseStateSystem:
 
         self.draw(ax)
         fig.savefig(filename)
+        # np.savetxt(filename[:-3]+'txt', ax)
+        # print(f"Results saved as {filename[:-3]}txt")
         plt.close()
