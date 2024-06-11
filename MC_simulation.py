@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import random
 
 # Create a 100x100 grid
-grid_size = 100
+grid_size = 256
 total_elements = grid_size * grid_size
 
 # Half ones and half zeros
-part_elements = int(total_elements * 0.4)
+part_elements = int(total_elements * 0.5)
 grid = np.array([1] * part_elements + [0] * (total_elements - part_elements))
 
 # Shuffle the grid to create a random distribution
@@ -66,7 +66,7 @@ fig, axs = plt.subplots(2, 2)
 axs[0,0].imshow(grid, cmap='gray', interpolation='none')
 axs[0,0].set_title('Before Monte Carlo Simulation')
 
-for i in range(10000):
+for i in range(1000000):
     # Find a random "one" and "zero"
     ones_indices = np.argwhere(grid == 1)
     zeros_indices = np.argwhere(grid == 0)
@@ -90,6 +90,10 @@ for i in range(10000):
         grid[random_zero[0], random_zero[1]] = 1
     else:
         continue
+
+# Save the grid data set after the for loop
+np.savetxt('/Users/user1/Documents/GitHub/turing-patterns/grid_data_256_1e6_step.txt', grid)
+print('Data after MC simluation is saved!')
 
 
     # # Display results

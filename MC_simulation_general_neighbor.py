@@ -81,10 +81,7 @@ def square_to_hex(values):
     return transformed_coordinates, values
 
 
-# Display the grid
-fig, axs = plt.subplots(2, 2)
-axs[0,0].imshow(grid, cmap='gray', interpolation='none', origin='lower')
-axs[0,0].set_title('Before Monte Carlo Simulation')
+
 
 for i in range(1):
     # Find a random "one" and "zero"
@@ -143,9 +140,7 @@ for i in range(1):
     # print(f"Neighbors of the random zero: {zero_neighbors}")
     # print(f"Number of ones around the random zero: {zero_count}")
 
-# Display the grid
-axs[0,1].imshow(grid, cmap='gray', interpolation='none', origin='lower')
-axs[0,1].set_title('After Monte Carlo Simulation')
+
 
 transformed_coordinates, values = square_to_hex(grid)
 a, b = 0, grid_size
@@ -169,57 +164,168 @@ crop_x = np.array(crop_x)
 crop_y = np.array(crop_y)
 crop_values = np.array(crop_values)
 # print(crop_x.shape, crop_y.shape)
-axs[1,0].scatter(transformed_coordinates[:, :, 0], (transformed_coordinates[:, :, 1]), c=values, cmap='viridis', label='Transformed', marker='H', linewidth=markersize)
-axs[1,1].scatter(crop_x, crop_y, c = crop_values, cmap='viridis', label='Cropped', marker='H',)
-axs[1,1].set_title('Cropped Hexagonal Grid')
-plt.show()
-
-fig, axs = plt.subplots(figsize=(6,6))
-axs.hexbin(crop_x, crop_y, crop_values, gridsize=(grid_size//2-1, int(grid_size//2/np.sqrt(3))), cmap='viridis')
-plt.show()
 
 
+# # Display the grid
+# fig, axs = plt.subplots(2, 2)
+# axs[0,0].imshow(grid, cmap='gray', interpolation='none', origin='lower')
+# axs[0,0].set_title('Before Monte Carlo Simulation')
+# axs[0,1].imshow(grid, cmap='gray', interpolation='none', origin='lower')
+# axs[0,1].set_title('After Monte Carlo Simulation')
+# axs[1,0].scatter(transformed_coordinates[:, :, 0], (transformed_coordinates[:, :, 1]), c=values, cmap='viridis', label='Transformed', marker='H', linewidth=markersize)
+# axs[1,1].scatter(crop_x, crop_y, c = crop_values, cmap='viridis', label='Cropped', marker='H',)
+# axs[1,1].set_title('Cropped Hexagonal Grid')
+# plt.show()
 
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import scipy.spatial
-
-# def generate_hex_grid(x_range, y_range, spacing):
-#     dx = spacing * 3/2
-#     dy = spacing * np.sqrt(3)
-    
-#     x_min, x_max = x_range
-#     y_min, y_max = y_range
-    
-#     grid_x = []
-#     grid_y = []
-    
-#     for x in np.arange(x_min, x_max, dx):
-#         for y in np.arange(y_min, y_max, dy):
-#             grid_x.append(x)
-#             grid_y.append(y)
-#             grid_x.append(x + spacing * 3/2)
-#             grid_y.append(y + spacing * np.sqrt(3)/2)
-    
-#     return np.array(grid_x), np.array(grid_y)
-
-# # Example dataset
-# x = np.random.rand(100) * 10  # replace with your x-coordinates
-# y = np.random.rand(100) * 10  # replace with your y-coordinates
-
-# # Define the range and spacing for the hexagonal grid
-# x_range = (x.min(), x.max())
-# # print(len(x))
-# y_range = (y.min(), y.max())
-# spacing = 1.0  # Adjust the spacing as needed
-
-# # Generate the hexagonal grid
-# grid_x, grid_y = generate_hex_grid(x_range, y_range, spacing)
-
-# # Plotting to visualize
-# plt.figure(figsize=(6, 6))
-# plt.hexbin(grid_x, grid_y, gridsize=int((x.max()-x.min())/spacing), cmap='viridis')
-# plt.scatter(x, y, color='red', s=1)  # Plot the original scatter data
+# fig, axs = plt.subplots(figsize=(6,6))
+# axs.hexbin(crop_x, crop_y, crop_values, gridsize=(grid_size//2-1, int(grid_size//2/np.sqrt(3))), cmap='viridis')
 # plt.show()
 
 
+
+# # import numpy as np
+# # import matplotlib.pyplot as plt
+# # import scipy.spatial
+
+# # def generate_hex_grid(x_range, y_range, spacing):
+# #     dx = spacing * 3/2
+# #     dy = spacing * np.sqrt(3)
+    
+# #     x_min, x_max = x_range
+# #     y_min, y_max = y_range
+    
+# #     grid_x = []
+# #     grid_y = []
+    
+# #     for x in np.arange(x_min, x_max, dx):
+# #         for y in np.arange(y_min, y_max, dy):
+# #             grid_x.append(x)
+# #             grid_y.append(y)
+# #             grid_x.append(x + spacing * 3/2)
+# #             grid_y.append(y + spacing * np.sqrt(3)/2)
+    
+# #     return np.array(grid_x), np.array(grid_y)
+
+# # # Example dataset
+# # x = np.random.rand(100) * 10  # replace with your x-coordinates
+# # y = np.random.rand(100) * 10  # replace with your y-coordinates
+
+# # # Define the range and spacing for the hexagonal grid
+# # x_range = (x.min(), x.max())
+# # # print(len(x))
+# # y_range = (y.min(), y.max())
+# # spacing = 1.0  # Adjust the spacing as needed
+
+# # # Generate the hexagonal grid
+# # grid_x, grid_y = generate_hex_grid(x_range, y_range, spacing)
+
+# # # Plotting to visualize
+# # plt.figure(figsize=(6, 6))
+# # plt.hexbin(grid_x, grid_y, gridsize=int((x.max()-x.min())/spacing), cmap='viridis')
+# # plt.scatter(x, y, color='red', s=1)  # Plot the original scatter data
+# # plt.show()
+
+
+
+
+
+
+
+
+
+# A simple searching nearest neighbors in 2D array
+# # import numpy as np
+
+# # # Example data points
+# # data_points = np.array([
+# #     [1, 2],
+# #     [2, 3],
+# #     [3, 4],
+# #     [4, 5],
+# #     [5, 6],
+# #     [7, 8],
+# #     [8, 9],
+# #     [10, 10]
+# # ])
+
+# # # Selected data point
+# # selected_point = np.array([3, 3])
+
+# # # Calculate the Euclidean distance between the selected point and all other points
+# # distances = np.linalg.norm(data_points - selected_point, axis=1)
+
+# # # Get the indices of the sorted distances
+# # sorted_indices = np.argsort(distances)
+
+# # # Select the 6 nearest neighbors (excluding the selected point itself if present in the dataset)
+# # nearest_neighbors_indices = sorted_indices[0:6]
+
+# # # Get the nearest neighbors
+# # nearest_neighbors = data_points[nearest_neighbors_indices]
+
+# # print("Nearest Neighbors:")
+# # print(nearest_neighbors)
+
+
+
+
+import numpy as np
+from scipy.spatial import KDTree
+import matplotlib.pyplot as plt
+
+def extend_points(data_points, x_box_size, y_box_size):
+    # Duplicate the data points in all periodic directions
+    extended_points = []
+    x_shifts = [-x_box_size, 0, x_box_size]
+    y_shifts = [-y_box_size, 0, y_box_size]
+    for dx in x_shifts:
+        for dy in y_shifts:
+            shift = np.array([dx, dy])
+            extended_points.append(data_points + shift)
+    return np.vstack(extended_points)
+
+# Example 100x100 grid of data points
+crop_x = crop_x - crop_x[0]
+x_box_size = 50 #max(crop_x) - min(crop_x) + (crop_x[0])/2
+y_box_size = 50 #max(crop_y) - min(crop_y)# - crop_y[0]/2
+# data_points = np.random.rand(10503, 2) * box_size  # Generating random 100x100 points in a unit box
+
+data_points = np.column_stack((crop_x-crop_x[0], crop_y))
+print(crop_x[0])
+# print(data_points.shape)
+# print(crop_x.shape, crop_y.shape)
+
+# Selected data point
+# selected_point = np.array([75, 25])
+selected_point = np.array([crop_x[0], crop_y[0]])
+# selected_point = random.choice(data_points)
+
+# Extend the data points to account for periodic boundary conditions
+extended_points = extend_points(data_points, x_box_size, y_box_size)
+
+
+
+# Create a KDTree for the extended data points
+tree = KDTree(extended_points)
+
+# Query the KDTree for the k nearest neighbors
+distances, indices = tree.query(selected_point, k=7)
+
+# Check if the selected point itself is in the result and remove it
+nearest_neighbors_indices = indices[indices != tree.query_ball_point(selected_point, 1e-3)[0]][:6]  # Using a small radius to find the exact match
+
+# Get the nearest neighbors (original indices)
+nearest_neighbors = extended_points[nearest_neighbors_indices]
+
+# Map neighbors back to the original space
+nearest_neighbors = nearest_neighbors % x_box_size
+
+plt.figure(figsize=(6, 6))
+# plt.scatter(extended_points[:, 0], extended_points[:, 1], color='blue', s=1)
+plt.scatter(data_points[:, 0], data_points[:, 1], color='blue', s=1)
+plt.scatter(selected_point[0], selected_point[1], color='red', s=10)
+plt.scatter(nearest_neighbors[:, 0], nearest_neighbors[:, 1], color='green', s=5)
+plt.show()
+
+# print("Nearest Neighbors:")
+# print(nearest_neighbors)
