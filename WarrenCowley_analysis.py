@@ -20,7 +20,7 @@ def square_to_hex(values):
     # theta = np.pi / 6  # Angle of rotation for hexagonal grid
     # s = 1 / np.cos(theta)  # Scale factor to maintain spacing
     s = 1
-    transformation_matrix = np.array([[s * 1, -s * 1/2],
+    transformation_matrix = np.array([[s * 1, s * 1/2],
                                     [s * 0, s * np.sqrt(3)/2]])
 
     # Apply the transformation to all points in the grid (excluding the values)
@@ -36,8 +36,13 @@ def square_to_hex(values):
 
 
 # Load the data from the file
-data = np.loadtxt('grid_data_256_1e6_step.txt').astype(int)
+data = np.loadtxt('grid_data_256_10000000_step_c=0_24.txt').astype(int)
 
+# Plot the data
+trans_data, values = square_to_hex(data)
+plt.scatter(trans_data[:,:,0],np.flipud(trans_data[:,:,1]), c=(-1)*(values-1), cmap='viridis', marker='H', linewidths=0.2)
+plt.title('Data')
+plt.show()
 
 neighbor_distance = [1, 3, 4, 7, 9] # in square unit
 neighbor_numbers = [6, 6, 6, 12, 6]
@@ -50,7 +55,7 @@ def get_neighbors(grid, row, col,):
     # temp = []
     for r in range(row-3, row+4):
         for c in range(col-3, col+4):
-            if abs(((c-col)+1/2*(r-row))**2 + ((r-row)*np.sqrt(3)/2)**2 - neighbor_distance[0]) < 0.01:
+            if abs(((c-col)+1/2*(r-row))**2 + ((r-row)*np.sqrt(3)/2)**2 - neighbor_distance[0]) < 0.05:
                 neighbors['first'].append(grid[r % grid_size, c % grid_size])
                 neighbors_coordinates['first'].append([r % grid_size, c % grid_size])
             if abs(((c-col)+1/2*(r-row))**2 + ((r-row)*np.sqrt(3)/2)**2 - neighbor_distance[1]) < 0.01:
@@ -118,16 +123,17 @@ for i in range(100000):
     zero_neighbors, zero_neighbors_coordinates = get_neighbors(data, random_zero[0], random_zero[1])
     # print(type(one_neighbors['first']))
 
-    # # FOR DEBUGGING
-    # if i == 0:
-        # nth_neighbor = 'fifth'
-        # print([random_one[0], random_one[1]], one_neighbors[nth_neighbor], one_neighbors_coordinates[nth_neighbor])
-        # axs[0,0].scatter(random_one[1], random_one[0])
-        # axs[0,0].scatter(np.array(one_neighbors_coordinates[nth_neighbor])[:,1], np.array(one_neighbors_coordinates[nth_neighbor])[:,0])
-        # print([random_zero[0], random_zero[1]], zero_neighbors[nth_neighbor], zero_neighbors_coordinates[nth_neighbor])
-        # axs[0,0].scatter(random_zero[1], random_zero[0])
-        # axs[0,0].scatter(np.array(zero_neighbors_coordinates[nth_neighbor])[:,1], np.array(zero_neighbors_coordinates[nth_neighbor])[:,0])
-
+    # FOR DEBUGGING
+    if i == 0:
+        nth_neighbor = 'first'
+        print([random_one[0], random_one[1]], one_neighbors[nth_neighbor], one_neighbors_coordinates[nth_neighbor])
+        plt.imshow(data)
+        plt.scatter(random_one[1], random_one[0])
+        plt.scatter(np.array(one_neighbors_coordinates[nth_neighbor])[:,1], np.array(one_neighbors_coordinates[nth_neighbor])[:,0])
+        print([random_zero[0], random_zero[1]], zero_neighbors[nth_neighbor], zero_neighbors_coordinates[nth_neighbor])
+        plt.scatter(random_zero[1], random_zero[0])
+        plt.scatter(np.array(zero_neighbors_coordinates[nth_neighbor])[:,1], np.array(zero_neighbors_coordinates[nth_neighbor])[:,0])
+        plt.show()
     
     # counting the status that is different from the center
     one_neighbor_zero = np.array([one_neighbors['first'].count(0), one_neighbors['second'].count(0), one_neighbors['third'].count(0), one_neighbors['fourth'].count(0), one_neighbors['fifth'].count(0)])
@@ -137,7 +143,7 @@ for i in range(100000):
 
     # print(one_neighbor_one, one_neighbor_zero)
     search_zero_find_one.append(zero_neighbor_one)
-
+    # print(zero_neighbor_one)
     # e_before = one_count + zero_count
     # e_after = 12 - e_before
 
@@ -170,11 +176,18 @@ print(probability_std)
 
 # Plot the probability and its standard deviation
 fig, axs = plt.subplots(2, 3)
-x = np.arange(len(probability))
-axs[0,0].errorbar(x, probability, yerr=probability_std, fmt='o')
+x = np.arange(1,len(probability)+1)
+# axs[0,0].errorbar(x, probability, yerr=probability_std, fmt='o')
+axs[0,0].plot(x, probability, 'o')
+ax2 = axs[0,0].twinx()
+
+# Plot the probability standard deviation on the twin Axes
+ax2.plot(x, 1-probability/0.76, 'o', color='red')
+ax2.set_ylabel('SRO parameter')
+
 axs[0,0].set_xlabel('Neighbor Number')
 axs[0,0].set_ylabel('Probability')
-axs[0,0].set_title('Probability with Standard Deviation')
+axs[0,0].set_title('Probability')
 axs[0,1].hist(search_zero_find_one[:,0])
 axs[0,1].set_title('First Neighbor')
 axs[0,2].hist(search_zero_find_one[:,1])

@@ -7,7 +7,8 @@ grid_size = 256
 total_elements = grid_size * grid_size
 
 # Half ones and half zeros
-part_elements = int(total_elements * 0.5)
+concentration = 0.24 # concentration of ones
+part_elements = int(total_elements * concentration)
 grid = np.array([1] * part_elements + [0] * (total_elements - part_elements))
 
 # Shuffle the grid to create a random distribution
@@ -66,7 +67,8 @@ fig, axs = plt.subplots(2, 2)
 axs[0,0].imshow(grid, cmap='gray', interpolation='none')
 axs[0,0].set_title('Before Monte Carlo Simulation')
 
-for i in range(1000000):
+steps = int(1e7)
+for i in range(steps):
     # Find a random "one" and "zero"
     ones_indices = np.argwhere(grid == 1)
     zeros_indices = np.argwhere(grid == 0)
@@ -92,7 +94,7 @@ for i in range(1000000):
         continue
 
 # Save the grid data set after the for loop
-np.savetxt('/Users/user1/Documents/GitHub/turing-patterns/grid_data_256_1e6_step.txt', grid)
+np.savetxt(f'/Users/user1/Documents/GitHub/turing-patterns/grid_data_{grid_size}_{steps}_step_c=0_24.txt', grid)
 print('Data after MC simluation is saved!')
 
 
