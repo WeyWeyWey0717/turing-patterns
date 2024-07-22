@@ -37,10 +37,12 @@ def square_to_hex(values):
 
 # Load the data from the file
 data = np.loadtxt('grid_data_256_10000000_step_c=0_24.txt').astype(int)
+print(data.shape)
+print(data[10][0])
 
 # Plot the data
 trans_data, values = square_to_hex(data)
-plt.scatter(trans_data[:,:,0],np.flipud(trans_data[:,:,1]), c=(-1)*(values-1), cmap='viridis', marker='H', linewidths=0.2)
+plt.scatter(trans_data[:,:,0],np.flipud(trans_data[:,:,1]), c=(-1)*(values-1), cmap='viridis', linewidths=0.2) # marker='H',
 plt.title('Data')
 plt.show()
 
@@ -110,7 +112,7 @@ def square_to_hex(values):
 
 
 search_zero_find_one = []
-for i in range(100000):
+for i in range(10):
     # Find a random "one" and "zero"
     ones_indices = np.argwhere(data == 1)
     zeros_indices = np.argwhere(data == 0)
@@ -123,17 +125,17 @@ for i in range(100000):
     zero_neighbors, zero_neighbors_coordinates = get_neighbors(data, random_zero[0], random_zero[1])
     # print(type(one_neighbors['first']))
 
-    # FOR DEBUGGING
-    if i == 0:
-        nth_neighbor = 'first'
-        print([random_one[0], random_one[1]], one_neighbors[nth_neighbor], one_neighbors_coordinates[nth_neighbor])
-        plt.imshow(data)
-        plt.scatter(random_one[1], random_one[0])
-        plt.scatter(np.array(one_neighbors_coordinates[nth_neighbor])[:,1], np.array(one_neighbors_coordinates[nth_neighbor])[:,0])
-        print([random_zero[0], random_zero[1]], zero_neighbors[nth_neighbor], zero_neighbors_coordinates[nth_neighbor])
-        plt.scatter(random_zero[1], random_zero[0])
-        plt.scatter(np.array(zero_neighbors_coordinates[nth_neighbor])[:,1], np.array(zero_neighbors_coordinates[nth_neighbor])[:,0])
-        plt.show()
+    # # FOR DEBUGGING
+    # if i == 0:
+    #     nth_neighbor = 'first'
+    #     print([random_one[0], random_one[1]], one_neighbors[nth_neighbor], one_neighbors_coordinates[nth_neighbor])
+    #     plt.imshow(data)
+    #     plt.scatter(random_one[1], random_one[0])
+    #     plt.scatter(np.array(one_neighbors_coordinates[nth_neighbor])[:,1], np.array(one_neighbors_coordinates[nth_neighbor])[:,0])
+    #     print([random_zero[0], random_zero[1]], zero_neighbors[nth_neighbor], zero_neighbors_coordinates[nth_neighbor])
+    #     plt.scatter(random_zero[1], random_zero[0])
+    #     plt.scatter(np.array(zero_neighbors_coordinates[nth_neighbor])[:,1], np.array(zero_neighbors_coordinates[nth_neighbor])[:,0])
+    #     plt.show()
     
     # counting the status that is different from the center
     one_neighbor_zero = np.array([one_neighbors['first'].count(0), one_neighbors['second'].count(0), one_neighbors['third'].count(0), one_neighbors['fourth'].count(0), one_neighbors['fifth'].count(0)])
@@ -164,15 +166,15 @@ for i in range(100000):
     # print(f"Neighbors of the random zero: {zero_neighbors}")
     # print(f"Number of ones around the random zero: {zero_count}")
 search_zero_find_one = np.array(search_zero_find_one)
-print(search_zero_find_one.shape)
+# print(search_zero_find_one.shape)
 probability = []
 probability_std = []
 for i in range(search_zero_find_one.shape[1]):
     probability.append(search_zero_find_one[:,i].mean()/neighbor_numbers[i])
     probability_std.append(search_zero_find_one[:,i].std()/neighbor_numbers[i])
 probability = np.array(probability)
-print(probability)
-print(probability_std)
+# print(probability)
+# print(probability_std)
 
 # Plot the probability and its standard deviation
 fig, axs = plt.subplots(2, 3)
