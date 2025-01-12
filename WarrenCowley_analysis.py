@@ -37,17 +37,30 @@ def square_to_hex(values):
 
 # Load the data from the file
 data = np.loadtxt('grid_data_256_10000000_step_c=0_24.txt').astype(int)
-print(data.shape)
-print(data[10][0])
+# 'grid_data_256_10000000_step_c=0_24.txt': 0 is more 
+count_ones = np.count_nonzero(data == 1)
+print(f"Number of 1s in data: {count_ones}")
+count_zeros = np.count_nonzero(data == 0)
+print(f"Number of 0s in data: {count_zeros}")
+# print(data.shape)
+# print(data[10][0])
 
 # Plot the data
 trans_data, values = square_to_hex(data)
-plt.scatter(trans_data[:,:,0],np.flipud(trans_data[:,:,1]), c=(-1)*(values-1), cmap='viridis', linewidths=0.2) # marker='H',
+plt.scatter(trans_data[:,:,0],np.flipud(trans_data[:,:,1]), c=(-1)*(values-1), cmap='viridis', linewidths=0.2) # marker='H', # c=(-1)*(values-1) to make 0s yellow and 1s blue
 plt.title('Data')
 plt.show()
 
 neighbor_distance = [1, 3, 4, 7, 9] # in square unit
 neighbor_numbers = [6, 6, 6, 12, 6]
+
+
+# count_ones = np.count_nonzero(data == 1)
+# print(f"Number of 1s in data: {count_ones}")
+# count_zeros = np.count_nonzero(data == 0)
+# print(f"Number of 0s in data: {count_zeros}")
+# changing the colors does not change the numbers of 0s and 1s 
+
 
 # Function to get nearest neighbors with periodic boundary conditions
 def get_neighbors(grid, row, col,):
@@ -112,10 +125,11 @@ def square_to_hex(values):
 
 
 search_zero_find_one = []
-for i in range(10):
+search_one_find_zero = []
+for i in range(100):
     # Find a random "one" and "zero"
-    ones_indices = np.argwhere(data == 1)
-    zeros_indices = np.argwhere(data == 0)
+    ones_indices = np.argwhere(data == 1) # 1s less (0.24)
+    zeros_indices = np.argwhere(data == 0) # 0s more (0.76)
 
     random_one = random.choice(ones_indices)
     random_zero = random.choice(zeros_indices)
@@ -145,6 +159,7 @@ for i in range(10):
 
     # print(one_neighbor_one, one_neighbor_zero)
     search_zero_find_one.append(zero_neighbor_one)
+    search_one_find_zero.append(one_neighbor_zero)
     # print(zero_neighbor_one)
     # e_before = one_count + zero_count
     # e_after = 12 - e_before
@@ -166,25 +181,29 @@ for i in range(10):
     # print(f"Neighbors of the random zero: {zero_neighbors}")
     # print(f"Number of ones around the random zero: {zero_count}")
 search_zero_find_one = np.array(search_zero_find_one)
+search_one_find_zero = np.array(search_one_find_zero)
 # print(search_zero_find_one.shape)
 probability = []
 probability_std = []
 for i in range(search_zero_find_one.shape[1]):
-    probability.append(search_zero_find_one[:,i].mean()/neighbor_numbers[i])
-    probability_std.append(search_zero_find_one[:,i].std()/neighbor_numbers[i])
+    # probability.append(search_zero_find_one[:,i].mean()/neighbor_numbers[i])
+    # probability_std.append(search_zero_find_one[:,i].std()/neighbor_numbers[i])
+    probability.append(search_one_find_zero[:,i].mean()/neighbor_numbers[i])
+    probability_std.append(search_one_find_zero[:,i].std()/neighbor_numbers[i])
 probability = np.array(probability)
 # print(probability)
 # print(probability_std)
+# 0s: yellow; 1s: blue
 
 # Plot the probability and its standard deviation
 fig, axs = plt.subplots(2, 3)
 x = np.arange(1,len(probability)+1)
 # axs[0,0].errorbar(x, probability, yerr=probability_std, fmt='o')
-axs[0,0].plot(x, probability, 'o')
+axs[0,0].plot(x, probability, 'o-')
 ax2 = axs[0,0].twinx()
 
 # Plot the probability standard deviation on the twin Axes
-ax2.plot(x, 1-probability/0.76, 'o', color='red')
+ax2.plot(x, 1-probability/0.76, 'o-', color='red')
 ax2.set_ylabel('SRO parameter')
 
 axs[0,0].set_xlabel('Neighbor Number')

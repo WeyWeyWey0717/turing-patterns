@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import random
 
 # Create a 100x100 grid
-grid_size = 256
+grid_size = 64
 total_elements = grid_size * grid_size
 
 # Half ones and half zeros
@@ -23,12 +23,18 @@ def get_neighbors(grid, row, col):
     neighbors = []
     for r in range(row-1, row+2):
         for c in range(col-1, col+2):
-            if (r == row and c == col) or (r==row-1 and c==col-1) or (r==row+1 and c==col+1):
+            if (r == row and c == col) or (r==row-1 and c==col-1) or (r==row+1 and c==col+1): # Exclude the center and left-bottom, right-top diagonal neighbors
+                # For perfect hexagon only - exclude the left-top, right-bottom diagonal neighbors
                 continue
             wrapped_r = r % grid_size
             wrapped_c = c % grid_size
             neighbors.append(grid[wrapped_r, wrapped_c])
     return neighbors
+
+# This code is based on square lattice -> consider neighbors in terms of hexagonal lattice
+# Transform square to hexagonal lattice in the end
+# So for blue bronze (imperfect hexagonal lattice), if we want to consider neighbors in terms of square lattice, modify the conditions
+# And "strain" the square_to_hex code in the end
 
 def square_to_hex(values):
     # # Define values for each point in the grid
@@ -63,9 +69,7 @@ def square_to_hex(values):
 
 
 # Display the grid
-fig, axs = plt.subplots(2, 2)
-axs[0,0].imshow(grid, cmap='gray', interpolation='none')
-axs[0,0].set_title('Before Monte Carlo Simulation')
+
 
 steps = int(1e7)
 for i in range(steps):
@@ -93,9 +97,11 @@ for i in range(steps):
     else:
         continue
 
+    if i % 1000000 == 0:
+        print(f"Step {i} completed!")
 # Save the grid data set after the for loop
-np.savetxt(f'/Users/user1/Documents/GitHub/turing-patterns/grid_data_{grid_size}_{steps}_step_c=0_24.txt', grid)
-print('Data after MC simluation is saved!')
+# np.savetxt(f'/Users/user1/Documents/GitHub/turing-patterns/grid_data_{grid_size}_{steps}_step_c=0_24.txt', grid)
+# print('Data after MC simluation is saved!')
 
 
     # # Display results
@@ -106,6 +112,10 @@ print('Data after MC simluation is saved!')
     # print(f"Random zero at {random_zero}: {grid[random_zero[0], random_zero[1]]}")
     # print(f"Neighbors of the random zero: {zero_neighbors}")
     # print(f"Number of ones around the random zero: {zero_count}")
+
+fig, axs = plt.subplots(2, 2)
+axs[0,0].imshow(grid, cmap='gray', interpolation='none')
+axs[0,0].set_title('Before Monte Carlo Simulation')
 
 # Display the grid
 # axs[0,1].imshow(grid, cmap='gray', interpolation='none')
