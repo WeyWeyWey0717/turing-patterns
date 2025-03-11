@@ -55,8 +55,9 @@ from scipy.stats import multivariate_normal
 
 
 
-
-data = np.loadtxt('20241212_MC_Results/20241212_grid_data_256_100000_step_c=0_25_alpha=_1.75_value1_coordinates.txt')
+# 20241212_grid_data_256_100000_step_c=0_33_alpha=_1_value1_coordinates
+# data = np.loadtxt('../turing-patterns/20241212_MC_Results/20241212_grid_data_256_100000_step_c=0_25_alpha=_1.75_value1_coordinates.txt')
+data = np.loadtxt('../turing-patterns/20241212_MC_Results/20241212_grid_data_256_100000_step_c=0_33_alpha=_1.25_value1_coordinates.txt')
 print(data.shape)
 plt.figure(figsize=(6,6))
 markersize = 3
@@ -94,10 +95,11 @@ axs[0].set_ylabel('Y')
 fft_map = np.fft.fftshift(np.fft.fft2(position_map_gaussian))
 
 # Plot the FFT result
-axs[1].imshow(np.log(np.abs(fft_map)), cmap='viridis', extent=[-0.5, 0.5, -0.5, 0.5])
+fig01 = axs[1].imshow(np.log(np.abs(fft_map)), cmap='viridis', extent=[-0.5, 0.5, -0.5, 0.5])
 axs[1].set_title('FFT of Gaussian Distribution')
 axs[1].set_xlabel('Frequency X')
 axs[1].set_ylabel('Frequency Y')
+plt.colorbar(fig01)
 
 plt.gca().set_aspect('equal', adjustable='box')
 plt.show()
